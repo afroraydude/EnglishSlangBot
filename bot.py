@@ -10,6 +10,25 @@ subreddit = reddit.subreddit("BritBot") # testing subreddit
 
 commented = None # delete this
 
+def usn_convert(parent):
+        hasUSN = False
+        c = "ERROR RECIEVED"
+        f = MyParser()
+        f.read('slanglib.ini')
+        words = f.as_dict()
+        try:
+                c = parent
+                for key in words['usn']:
+                        c = c.replace(key, words['usn'][key])
+                        hasUSN = True
+        except:
+                print "CANNOT GET PARENT BODY"
+        if hasUSN:
+                print "Translated"
+        else:
+                c = "There is no british slang here!"
+        return c
+
 def brit_convert(parent):
 	hasBrit = False
         c = "ERROR RECIEVED"

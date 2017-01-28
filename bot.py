@@ -14,7 +14,7 @@ def brit_convert(parent):
 	hasBrit = False
         c = "ERROR RECIEVED"
 	f = MyParser()
-	f.read('brit.ini')
+	f.read('slanglib.ini')
 	words = f.as_dict()
 	try:
 		c = parent
@@ -30,7 +30,7 @@ def brit_convert(parent):
 	return c
 def check_summon(c):		
     text = c.body
-    if text.find("engslang! brit") != -1:
+    if text.find("engslang!") != -1:
         return True
 def bot_action(c, verbose=True, respond=True):
     	test = "MessageCheck Started"
@@ -44,20 +44,23 @@ def bot_action(c, verbose=True, respond=True):
             parent = c.parent()
 	    try:
 		check = parent.body
-		fixed = "Translation: " + brit_convert(parent.body) 
+		if text.find("brit") != -1:
+			fixed = "Translation: " + brit_convert(parent.body) 
+		else:
+		    print "Command does not exist"
 		try:
                     c.reply(head + fixed + tail)
 		except praw.exception.APIException:
 		    print "Pausing for 2 mins"
 		    time.sleep(120)
 		    c.reply(head + fixed + tail)
-                    with open("commented.txt", "a") as myfile:
-                        myfile.write("\n" + c.id)
+                with open("commented.txt", "a") as myfile:
+                    myfile.write("\n" + c.id)
                 
 		#    print "WAS KILL"
 		
             except AttributeError:
-		print "is submission " + c.id
+		print "is submission or error, comment id " + c.id
 	else:
 		print "is me"
 		return

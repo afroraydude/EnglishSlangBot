@@ -1,6 +1,6 @@
 import praw # external stuff
 import time # python stuff
-import sys
+import sys # delete this
 
 from MyParser import MyParser # my stuff
 
@@ -10,20 +10,20 @@ subreddit = reddit.subreddit("BritBot") # testing subreddit
 
 commented = None # delete this
 
-def usn_convert(parent):
-        hasUSN = False
+def us_convert(parent):
+        hasUS = False
         c = "ERROR RECIEVED"
         f = MyParser()
         f.read('slanglib.ini')
         words = f.as_dict()
         try:
                 c = parent
-                for key in words['usn']:
-                        c = c.replace(key, words['usn'][key])
-                        hasUSN = True
+                for key in words['us']:
+                        c = c.replace(key, words['us'][key])
+                        hasUS = True
         except:
                 print "CANNOT GET PARENT BODY"
-        if hasUSN:
+        if hasUS:
                 print "Translated"
         else:
                 c = "There is no british slang here!"
@@ -65,6 +65,9 @@ def bot_action(c, verbose=True, respond=True):
 		check = parent.body
 		if text.find("brit") != -1:
 			fixed = "Translation: " + brit_convert(parent.body) 
+		else if text.find("us") != -1:
+			fixed = "Translation: " + us_convert(parent.body)
+		
 		else:
 		    print "Command does not exist"
 		try:

@@ -1,3 +1,4 @@
+# TODO: VERBOSITY
 import praw # external stuff
 import time # python stuff
 import sys # delete this
@@ -36,10 +37,10 @@ def brit_convert(parent):
 	f.read('slanglib.ini')
 	words = f.as_dict()
 	try:
-		c = parent
-		for key in words['brit']:
-			c = c.replace(key, words['brit'][key])
-       			hasBrit = True
+		c = parent # parent comment's body (what we translate)
+		for key in words['brit']: # all words in the British slang list
+			c = c.replace(key, words['brit'][key]) # Replaces the word with the translation 
+       			hasBrit = True # See below for usage
 	except:
 		print "CANNOT GET PARENT BODY"
 	if hasBrit:
@@ -52,13 +53,14 @@ def check_summon(c):
     if text.find("engslang!") != -1:
         return True
 def bot_action(c, verbose=True, respond=True):
-    	test = "MessageCheck Started"
+    	if verbose:
+		test = "MessageCheck Started" 
 	text = c.body
     	if verbose:
     	    print test
         if respond and text.find("has been summoned") == -1:
-            head = "SlangBot (English) has been summoned!\n\n"
-	    tail = "\n\n[^^^I ^^^am ^^^a ^^^bot](http://reddit.com/r/britbot/)\nYou can provide feedback in my subreddit: /r/BritBot :)"
+            head = "SlangBot (English) has been summoned!\n\n" # Begining of message
+	    tail = "\n\n[^^^I ^^^am ^^^a ^^^bot](http://reddit.com/r/britbot/)\nYou can provide feedback in my subreddit: /r/BritBot :)" # end of message
 	 
             parent = c.parent()
 	    try:
@@ -82,11 +84,13 @@ def bot_action(c, verbose=True, respond=True):
 		#    print "WAS KILL"
 		
             except AttributeError:
-		print "is submission or error, comment id " + c.id
+		if verbose:
+			print "is submission or error, comment id " + c.id
 	else:
-		print "is me"
+		if verbose:
+			print "is me"
 		return
-def check_post(s):
+def check_post(s, verbose=True):
 	try:
 		author = str(s.author.name)
 		return True
@@ -99,7 +103,8 @@ def hasnt_answered(c, verbose=True):
             print "Bot has been summoned and has not replied"
         bot_action(c)
     else:
-	print "I have already answered"
+	if verbose:
+		print "I have already answered"
 
 for c in subreddit.stream.comments():
     if check_summon(c):

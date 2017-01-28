@@ -17,4 +17,4 @@ All commands start with the prefix `engslang!` and should be written `engslang! 
 4) Done!
 
 # Helping out
-Everything the bot uses (minus login) is in this project. Translations are held in `brit.ini`. Just send a pull request.
+Everything the bot uses (minus login) is in this project. Translations are held in `slanglib.ini`. Just send a pull request.

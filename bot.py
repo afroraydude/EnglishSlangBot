@@ -1,5 +1,6 @@
 import praw # external stuff
 import time # python stuff
+import sys
 
 from MyParser import MyParser # my stuff
 
@@ -10,25 +11,22 @@ subreddit = reddit.subreddit("BritBot") # testing subreddit
 commented = None # delete this
 
 def brit_convert(parent):
+	hasBrit = False
         c = "ERROR RECIEVED"
+	f = MyParser()
+	f.read('brit.ini')
+	words = f.as_dict()
 	try:
-		f = MyParser()
-		try:
-			c = parent
-        	except:
-			print "CANNOT GET PARENT BODY"
-		f.read("brit.ini")
-        	d = f.as_dict()
+		c = parent
+		for key in words['brit']:
+			c = c.replace(key, words['brit'][key])
+       			hasBrit = True
 	except:
-		print "ERROR!"
-	try:
-		for key in d['brit']:
-			new = d['brit'][key]
-			string.replace(c, key, d['brit'][key])
-			print new
-			print c
-	except:
-		print "TRY AGAIN AFRO"
+		print "CANNOT GET PARENT BODY"
+	if hasBrit:
+		print "Translated"
+	else:
+		c = "There is no british slang here!"
 	return c
 def check_summon(c):		
     text = c.body
@@ -46,7 +44,7 @@ def bot_action(c, verbose=True, respond=True):
             parent = c.parent()
 	    try:
 		check = parent.body
-		fixed = brit_convert(parent.body)
+		fixed = "Translation: " + brit_convert(parent.body) 
 		try:
                     c.reply(head + fixed + tail)
 		except praw.exception.APIException:
@@ -63,9 +61,15 @@ def bot_action(c, verbose=True, respond=True):
 	else:
 		print "is me"
 		return
+def check_post(s):
+	try:
+		author = str(s.author.name)
+		return True
+	except:
+		return False
 def hasnt_answered(c, verbose=True):
     commented = open("commented.txt").read().splitlines()
-    if c.id not in commented:
+    if c.id not in commented and check_post:
         if verbose:
             print "Bot has been summoned and has not replied"
         bot_action(c)

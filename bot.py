@@ -67,11 +67,12 @@ def bot_action(c, verbose=True, respond=True):
 		check = parent.body
 		if text.find("brit") != -1:
 			fixed = "Translation: " + brit_convert(parent.body) 
-		else if text.find("us") != -1:
-			fixed = "Translation: " + us_convert(parent.body)
-		
 		else:
-		    print "Command does not exist"
+			if text.find("us") != -1:
+				fixed = "Translation: " + us_convert(parent.body)
+		
+			else:
+		    		print "Command does not exist"
 		try:
                     c.reply(head + fixed + tail)
 		except praw.exception.APIException:

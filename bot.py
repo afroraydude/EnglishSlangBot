@@ -14,7 +14,26 @@ subreddit = reddit.subreddit("all") # testing subreddit
 commented = None # delete this
 
 def ca_convert(parent,verbose=True):
-
+    hasCa = False
+    c = "None"
+    f = MyParser()
+    f.read('slanglib.ini')
+    words = f.as_dict()
+    try:
+        c = parent
+        for key in words['ca']:
+            oldc = c
+            c = c.replace(key, words['ca'][key])
+            if oldc != c:
+                hasCa = True
+    except:
+        print "Cannot get body"
+    if hasCa:
+        if verbose:
+            print "Translated"
+    else:
+        c = "There is nothing to translate"
+    return c
 def aus_convert(parent,verbose=True):
     hasAus = False
     c = "ERROR RECIEVED"

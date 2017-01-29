@@ -13,6 +13,8 @@ subreddit = reddit.subreddit("all") # testing subreddit
 
 commented = None # delete this
 
+def ca_convert(parent,verbose=True):
+
 def aus_convert(parent,verbose=True):
     hasAus = False
     c = "ERROR RECIEVED"

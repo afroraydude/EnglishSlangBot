@@ -128,8 +128,7 @@ def check_post(s, verbose=True):
 		return False
 def hasnt_answered(c, verbose=True):
     commented = open("commented.txt").read().splitlines()
-    with open("commented.txt", "a") as myfile:
-        myfile.write("\n" + c.id) # So we know not to message again
+
     if c.id not in commented and check_post:
         if verbose:
             print "Bot has been summoned and has not replied"

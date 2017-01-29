@@ -13,7 +13,28 @@ subreddit = reddit.subreddit("all") # testing subreddit
 
 commented = None # delete this
 
-def us_convert(parentverbose=True):
+def aus_convert(parent,verbose=True):
+    hasAus = False
+    c = "ERROR RECIEVED"
+    f = MyParser()
+    f.read('slanglib.ini')
+    words = f.as_dict()
+    try:
+        c = parent
+        for key in words['aus']:
+            oldc = c
+            c = c.replace(key, words['aus'][key])
+            if oldc != c:
+                hasAus = True
+    except:
+        print "Cannot get parent body"
+    if hasAus:
+        if verbose:
+            print "Translated"
+    else:
+        c = "There is nothing to translate!"
+    return c
+def us_convert(parent,verbose=True):
         hasUS = False
         c = "ERROR RECIEVED"
         f = MyParser()
@@ -22,7 +43,9 @@ def us_convert(parentverbose=True):
         try:
                 c = parent
                 for key in words['us']:
-                        c = c.replace(key, words['us'][key])
+                    oldc = c
+                    c = c.replace(key, words['us'][key])
+                    if oldc != c:
                         hasUS = True
         except:
             if verbose:
@@ -43,8 +66,10 @@ def brit_convert(parent,verbose=True):
 	try:
 		c = parent # parent comment's body (what we translate)
 		for key in words['brit']: # all words in the British slang list
-			c = c.replace(key, words['brit'][key]) # Replaces the word with the translation
-       			hasBrit = True # See below for usage
+		    oldc = c
+                    c = c.replace(key, words['brit'][key]) # Replaces the word with the translation
+       		    if oldc != c:
+                        hasBrit = True # See below for usage
 	except:
             if verbose:
 		print "CANNOT GET PARENT BODY"
@@ -62,10 +87,11 @@ def check_subs(c, verbose=True):
     sname = subreddit.display_name
     if sname in appsubs:
         print "Subreddit " + sname + " is an approved subreddit"
+        return True
     else:
         if verbose:
             print "Subreddit " + sname + " is not approved :("
-
+        return False
 def warn_user(c):
     user = c.author
     subreddit = c.subreddit
@@ -75,7 +101,7 @@ def warn_user(c):
         print "Error while trying"
 def do_work(c):
     text = c.body
-    if text.find("engslang!") != -1 and hasnt_answered(c) and check_subs(c):
+    if text.find("engslang!") != -1 and check_subs(c) and hasnt_answered:
         bot_action(c)
     else:
         if text.find("engslang!") != -1 and hasnt_answered(c):
@@ -89,7 +115,7 @@ def bot_action(c, verbose=True, respond=True):
     	    print test
         if respond and text.find("has been summoned") == -1: # If it is me
             head = "SlangBot (English) has been summoned!\n\n" # Begining of message
-	    tail = "\n\n[^^^I ^^^am ^^^a ^^^bot](http://reddit.com/r/britbot/)\nYou can provide feedback in my subreddit: /r/BritBot :)" # end of message
+	    tail = "\n\n[^^^I ^^^am ^^^a ^^^bot](http://reddit.com/r/britbot/) created by /u/afroraydude \nYou can provide feedback in my subreddit: /r/BritBot :)" # end of message
 
             parent = c.parent()
 	    try:

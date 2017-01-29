@@ -9,7 +9,7 @@ from MyParser import MyParser # my stuff
 
 reddit = praw.Reddit('bot1') # from config
 
-subreddit = reddit.subreddit("BritBot") # testing subreddit
+subreddit = reddit.subreddit("all") # testing subreddit
 
 commented = None # delete this
 
@@ -69,15 +69,18 @@ def check_subs(c, verbose=True):
 def warn_user(c):
     user = c.author
     subreddit = c.subreddit
-    user.message("From English Slang Bot Creator", "English Slang Bot hasn't been aproved for the requested subreddit. Your comment was:\n\n" + c.permalink + "\n\nPlease have the moderators contact /u/afroraydude or post in /r/BritBot or place an issue on [here](http://github.com/afroraydude/EnglishSlangBot)". from_subreddit=subreddit)
-
+    try:
+        user.message("From English Slang Bot Creator", "English Slang Bot hasn't been aproved for the requested subreddit.\n\nPlease have the moderators contact /u/afroraydude or post in /r/BritBot or place an issue on [here](http://github.com/afroraydude/EnglishSlangBot)", from_subreddit=subreddit)
+    except:
+        print "Error while trying"
 def do_work(c):
     text = c.body
     if text.find("engslang!") != -1 and hasnt_answered(c) and check_subs(c):
         bot_action(c)
     else:
-        if text.find("engslang!") != -1:
+        if text.find("engslang!") != -1 and hasnt_answered(c):
             warn_user(c)
+        # Else do nothing
 def bot_action(c, verbose=True, respond=True):
     	if verbose:
 		test = "MessageCheck Started"
@@ -125,6 +128,8 @@ def check_post(s, verbose=True):
 		return False
 def hasnt_answered(c, verbose=True):
     commented = open("commented.txt").read().splitlines()
+    with open("commented.txt", "a") as myfile:
+        myfile.write("\n" + c.id) # So we know not to message again
     if c.id not in commented and check_post:
         if verbose:
             print "Bot has been summoned and has not replied"

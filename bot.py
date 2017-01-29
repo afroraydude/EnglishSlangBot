@@ -54,10 +54,23 @@ def brit_convert(parent,verbose=True):
 	else:
 		c = "There is no british slang here!"
 	return c
-def check_summon(c):
+
+def check_subs(c, verbose=True):
+    appsubs = open("subs.txt").read().splitlines()
+    post = c.submission
+    subreddit = post.subreddit
+    sname = subreddit.display_name
+    if sname in appsubs:
+        print "Subreddit " + sname + " is an approved subreddit"
+    else:
+        if verbose:
+            print "Subreddit " + sname + " is not approved :("
+
+
+def do_work(c):
     text = c.body
-    if text.find("engslang!") != -1:
-        return True
+    if text.find("engslang!") != -1 and check_subs(c):
+        hasnt_answered(c)
 def bot_action(c, verbose=True, respond=True):
     	if verbose:
 		test = "MessageCheck Started"
@@ -114,5 +127,4 @@ def hasnt_answered(c, verbose=True):
 		print "I have already answered"
 
 for c in subreddit.stream.comments():
-    if check_summon(c):
-        hasnt_answered(c)
+    do_work(c)

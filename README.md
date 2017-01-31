@@ -9,6 +9,12 @@ All commands start with the prefix `engslang!` and should be written `engslang! 
 
 `brit`: Converts English (London-based) slang into regular english (ex: conk = hit)
 
+`us`: Converts American (US) slang into regular english
+
+`aus`: Converts Austrialian slang into regular english
+
+`ca`: Could not find Canadian slang, help out!
+
 # How it works
 
 1) You see a message with slang in it

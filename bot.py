@@ -34,28 +34,28 @@ def ca_convert(parent,verbose=True):
     else:
         c = "There is nothing to translate"
     return c
-def aus_convert(parent,verbose=True):
+def aus_convert(parent,verbose=True): # Austrailians am I right?
     hasAus = False
     c = "ERROR RECIEVED"
     f = MyParser()
     f.read('slanglib.ini')
     words = f.as_dict()
-    try:
+    try: # what if I break at some point?
         c = parent
         for key in words['aus']:
             oldc = c
             c = c.replace(key, words['aus'][key])
             if oldc != c:
                 hasAus = True
-    except:
+    except: # guess I can't now
         print "Cannot get parent body"
     if hasAus:
         if verbose:
             print "Translated"
-    else:
+    else: # Just making sure its impossible now
         c = "There is nothing to translate!"
     return c
-def us_convert(parent,verbose=True):
+def us_convert(parent,verbose=True): # Same as above, but US
         hasUS = False
         c = "ERROR RECIEVED"
         f = MyParser()

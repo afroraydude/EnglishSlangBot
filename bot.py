@@ -13,7 +13,7 @@ subreddit = reddit.subreddit("all") # testing subreddit
 
 commented = None # delete this
 
-def ca_convert(parent,verbose=True):
+def convert(parent,verbose=True,slang):
     hasCa = False
     c = "None"
     f = MyParser()
@@ -23,7 +23,7 @@ def ca_convert(parent,verbose=True):
         c = parent
         for key in words['ca']:
             oldc = c
-            c = c.replace(key, words['ca'][key])
+            c = c.replace(key, words[slang][key])
             if oldc != c:
                 hasCa = True
     except:
@@ -34,73 +34,6 @@ def ca_convert(parent,verbose=True):
     else:
         c = "There is nothing to translate"
     return c
-def aus_convert(parent,verbose=True): # Austrailians am I right?
-    hasAus = False
-    c = "ERROR RECIEVED"
-    f = MyParser()
-    f.read('slanglib.ini')
-    words = f.as_dict()
-    try: # what if I break at some point?
-        c = parent
-        for key in words['aus']:
-            oldc = c
-            c = c.replace(key, words['aus'][key])
-            if oldc != c:
-                hasAus = True
-    except: # guess I can't now
-        print "Cannot get parent body"
-    if hasAus:
-        if verbose:
-            print "Translated"
-    else: # Just making sure its impossible now
-        c = "There is nothing to translate!"
-    return c
-def us_convert(parent,verbose=True): # Same as above, but US
-        hasUS = False
-        c = "ERROR RECIEVED"
-        f = MyParser()
-        f.read('slanglib.ini')
-        words = f.as_dict()
-        try:
-                c = parent
-                for key in words['us']:
-                    oldc = c
-                    c = c.replace(key, words['us'][key])
-                    if oldc != c:
-                        hasUS = True
-        except:
-            if verbose:
-                print "CANNOT GET PARENT BODY"
-        if hasUS:
-            if verbose:
-                print "Translated"
-        else:
-                c = "There is no US slang here!"
-        return c
-
-def brit_convert(parent,verbose=True):
-	hasBrit = False
-        c = "ERROR RECIEVED"
-	f = MyParser()
-	f.read('slanglib.ini')
-	words = f.as_dict()
-	try:
-		c = parent # parent comment's body (what we translate)
-		for key in words['brit']: # all words in the British slang list
-		    oldc = c
-                    c = c.replace(key, words['brit'][key]) # Replaces the word with the translation
-       		    if oldc != c:
-                        hasBrit = True # See below for usage
-	except:
-            if verbose:
-		print "CANNOT GET PARENT BODY"
-	if hasBrit:
-            if verbose:
-		print "Translated"
-	else:
-		c = "There is no british slang here!"
-	return c
-
 def check_subs(c, verbose=True):
     appsubs = open("subs.txt").read().splitlines()
     post = c.submission
@@ -142,10 +75,10 @@ def bot_action(c, verbose=True, respond=True):
 	    try:
 		check = parent.body
 		if text.find("brit") != -1: # If you use the Brit command
-			fixed = "Translation: " + brit_convert(parent.body)
+			fixed = "Translation: " + convert(parent.body,"brit")
 		else: # For other commands
 			if text.find("us") != -1: # US command
-				fixed = "Translation: " + us_convert(parent.body)
+				fixed = "Translation: " + us_convert(parent.body,"us")
 
 			else: # Any command that is not registered
 			    if verbose:
